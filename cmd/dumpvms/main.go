@@ -56,14 +56,14 @@ func main() {
 		printHelp()
 		os.Exit(1)
 	}
-	if arg := args[1]; arg != summary && arg != vms {
+	switch args[1] {
+	case summary:
+		result, err = dumpSummary()
+	case vms:
+		result, err = getVms()
+	default:
 		printHelp()
 		os.Exit(1)
-	}
-	if args[1] == summary {
-		result, err = dumpSummary()
-	} else {
-		result, err = getVms()
 	}
 	if err != nil {
 		fmt.Println(err)
