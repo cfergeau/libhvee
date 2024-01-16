@@ -11,6 +11,7 @@ import (
 
 	"github.com/containers/libhvee/pkg/hypervctl"
 	"github.com/containers/libhvee/pkg/kvp/ginsu"
+	ver "github.com/containers/libhvee/pkg/version"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sys/windows"
 )
@@ -25,6 +26,7 @@ const (
 	get     kvpcmd = "get"
 	put     kvpcmd = "put"
 	rm      kvpcmd = "rm"
+	version kvpcmd = "version"
 	unknown kvpcmd = ""
 )
 
@@ -44,12 +46,14 @@ func getSubCommand(cmd string) kvpcmd {
 		return rm
 	case string(clear):
 		return clear
+	case string(version):
+		return version
 	}
 	return unknown
 }
 
 func printHelp() {
-	fmt.Printf("Usage: %s <vm name> (get|add|add-ign|rm|edit|put|clear) [<key>] [<value>]\n\n", os.Args[0])
+	fmt.Printf("Usage: %s <vm name> (get|add|add-ign|rm|edit|put|clear|version) [<key>] [<value>]\n\n", os.Args[0])
 	fmt.Printf("\tget   = get all keys or a specific key\n")
 	fmt.Printf("\tadd   = create a key if it doesn't exist\n")
 	fmt.Printf("\tadd-ign   = split and add key-value pairs for an Ignition config\n")
@@ -57,6 +61,7 @@ func printHelp() {
 	fmt.Printf("\tput   = create or edit a key\n")
 	fmt.Printf("\trm    = delete one or more keys\n")
 	fmt.Printf("\tclear = delete everything\n\n")
+	fmt.Printf("\tversion = print the binary version\n\n")
 	os.Exit(1)
 }
 
@@ -104,6 +109,8 @@ func main() {
 		err = clearOperation(vm)
 	case addIgn:
 		err = addIgnFile(vm, os.Args[3])
+	case version:
+		fmt.Printf("%s\n", ver.ModuleVersion())
 
 	default:
 		fmt.Printf("Operation must be get, add, add-ign, rm, edit, clear, or put\n")

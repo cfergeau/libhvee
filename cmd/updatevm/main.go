@@ -9,9 +9,15 @@ import (
 	"strconv"
 
 	"github.com/containers/libhvee/pkg/hypervctl"
+	"github.com/containers/libhvee/pkg/version"
 )
 
 func main() {
+
+	if len(os.Args) == 2 && (os.Args[1] == "version" || os.Args[1] == "--version") {
+		fmt.Printf("%s\n", version.ModuleVersion())
+		os.Exit(0)
+	}
 
 	if len(os.Args) < 4 {
 		fmt.Printf("Usage: %s <vm name> <cores> <static mem>\n\n", os.Args[0])

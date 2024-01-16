@@ -2,6 +2,9 @@ export GOOS=windows
 export GOARCH=amd64
 SRC = $(shell find . -type f -name '*.go')
 
+GIT_VERSION ?= $(shell git describe --always --dirty)
+LDFLAGS=-X github.com/containers/libhvee/pkg/version.gitVersion=$(GIT_VERSION)
+
 .PHONY: default
 default: build
 
@@ -24,16 +27,16 @@ bin:
 
 
 bin/kvpctl.exe: $(SRC) go.mod go.sum
-	go build -o bin ./cmd/kvpctl
+	go build -ldflags "$(LDFLAGS)" -o bin ./cmd/kvpctl
 
 bin/dumpvms.exe: $(SRC) go.mod go.sum
-	go build -o bin ./cmd/dumpvms
+	go build -ldflags "$(LDFLAGS)" -o bin ./cmd/dumpvms
 
 bin/createvm.exe: $(SRC) go.mod go.sum
-	go build -o bin ./cmd/createvm
+	go build -ldflags "$(LDFLAGS)" -o bin ./cmd/createvm
 
 bin/updatevm.exe: $(SRC) go.mod go.sum
-	go build -o bin ./cmd/updatevm
+	go build -ldflags "$(LDFLAGS)" -o bin ./cmd/updatevm
 
 clean:
 	rm -rf bin

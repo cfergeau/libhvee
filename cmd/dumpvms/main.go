@@ -9,10 +9,12 @@ import (
 	"os"
 
 	"github.com/containers/libhvee/pkg/hypervctl"
+	ver "github.com/containers/libhvee/pkg/version"
 )
 
 const (
 	summary = "summary"
+	version = "version"
 	vms     = "vms"
 )
 
@@ -43,7 +45,7 @@ func dumpSummary() (string, error) {
 }
 
 func printHelp() {
-	fmt.Printf("argument must be one of %q or %q", summary, vms)
+	fmt.Printf("argument must be one of %q, %q or %q", summary, version, vms)
 }
 
 func main() {
@@ -59,6 +61,8 @@ func main() {
 	switch args[1] {
 	case summary:
 		result, err = dumpSummary()
+	case version:
+		result = ver.ModuleVersion()
 	case vms:
 		result, err = getVms()
 	default:
